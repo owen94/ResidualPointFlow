@@ -160,3 +160,4 @@ if __name__ == '__main__':
     writer = SummaryWriter(logdir=log_dir)
 
     main()
+    # test upload

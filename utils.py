@@ -54,11 +54,7 @@ def reduce_tensor(tensor, world_size=None):
 def get_lipschitz_constants(model):
     lipschitz_constants = []
     for m in model.modules():
-        if isinstance(m, base_layers.SpectralNormConv2d) or isinstance(m, base_layers.SpectralNormLinear):
-            lipschitz_constants.append(m.scale)
-        if isinstance(m, base_layers.InducedNormConv2d) or isinstance(m, base_layers.InducedNormLinear):
-            lipschitz_constants.append(m.scale)
-        if isinstance(m, base_layers.LopConv2d) or isinstance(m, base_layers.LopLinear):
+        if isinstance(m, base_layers.SpectralNormConv1d) or isinstance(m, base_layers.SpectralNormLinear1d):
             lipschitz_constants.append(m.scale)
     return lipschitz_constants
 
@@ -66,40 +62,11 @@ def get_lipschitz_constants(model):
 def update_lipschitz(model):
     with torch.no_grad():
         for m in model.modules():
-            if isinstance(m, base_layers.SpectralNormConv2d) or isinstance(m, base_layers.SpectralNormLinear):
+            if isinstance(m, base_layers.SpectralNormConv1d) or isinstance(m, base_layers.SpectralNormLinear1d):
                 m.compute_weight(update=True)
-            if isinstance(m, base_layers.InducedNormConv2d) or isinstance(m, base_layers.InducedNormLinear):
-                m.compute_weight(update=True)
-
-
-def get_ords(model):
-    ords = []
-    for m in model.modules():
-        if isinstance(m, base_layers.InducedNormConv2d) or isinstance(m, base_layers.InducedNormLinear):
-            domain, codomain = m.compute_domain_codomain()
-            if torch.is_tensor(domain):
-                domain = domain.item()
-            if torch.is_tensor(codomain):
-                codomain = codomain.item()
-            ords.append(domain)
-            ords.append(codomain)
-    return ords
 
 def pretty_repr(a):
     return '[[' + ','.join(list(map(lambda i: f'{i:.2f}', a))) + ']]'
-
-def compute_p_grads(model):
-    scales = 0.
-    nlayers = 0
-    for m in model.modules():
-        if isinstance(m, base_layers.InducedNormConv2d) or isinstance(m, base_layers.InducedNormLinear):
-            scales = scales + m.compute_one_iter()
-            nlayers += 1
-    scales.mul(1 / nlayers).backward()
-    for m in model.modules():
-        if isinstance(m, base_layers.InducedNormConv2d) or isinstance(m, base_layers.InducedNormLinear):
-            if m.domain.grad is not None and torch.isnan(m.domain.grad):
-                m.domain.grad = None
 
 def estimator_moments(model, baseline=0):
     avg_first_moment = 0.
