@@ -58,11 +58,10 @@ def init_parse():
 
     # optimizer parameters
     parser.add_argument('--optimizer', type=str, choices=['adam', 'adamax', 'rmsprop', 'sgd'], default='adam')
-    parser.add_argument('--scheduler', type=eval, choices=[True, False], default=False)
-    parser.add_argument('--nepochs', help='Number of epochs for training', type=int, default=1000)
+    parser.add_argument('--epochs', help='Number of epochs for training', type=int, default=1000)
     parser.add_argument('--batch_size', help='Minibatch size', type=int, default=8)
     parser.add_argument('--lr', help='Learning rate', type=float, default=1e-3)
-    parser.add_argument('--wd', help='Weight decay', type=float, default=0)
+    parser.add_argument('--wd', help='Weight decay', type=float, default=1e-4)
     parser.add_argument('--warmup-iters', type=int, default=1000)
     parser.add_argument('--annealing-iters', type=int, default=0)
 
@@ -71,17 +70,18 @@ def init_parse():
     parser.add_argument('--scale-dim', type=eval, choices=[True, False], default=False)
     parser.add_argument('--resume', type=str, default=None)
     parser.add_argument('--begin-epoch', type=int, default=0)
+    parser.add_argument('--gpu', type=int, default=0)
     parser.add_argument('--nworkers', type=int, default=4)
-    parser.add_argument('--log_freq', help='Print progress every so iterations', type=int, default=20)
-    parser.add_argument('--vis-freq', help='Visualize progress every so iterations', type=int, default=500)
     parser.add_argument('--distributed', type=bool, default=False)
 
 
     # save and eval
-    parser.add_argument('--save', help='directory to save results', type=str, default='experiment1')
+    parser.add_argument('--save', help='directory to save results', type=str, default='exp1')
     parser.add_argument('--val-batchsize', help='minibatch size', type=int, default=200)
     parser.add_argument('--ema-val', type=eval, choices=[True, False], default=True)
     parser.add_argument('--update-freq', type=int, default=1)
+    parser.add_argument('--log-freq', type=int, default=20)
+
 
     # others
     parser.add_argument('--rcrop-pad-mode', type=str, choices=['constant', 'reflect'], default='reflect')

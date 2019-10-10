@@ -8,15 +8,9 @@ from tqdm import tqdm
 import gc
 
 import torch
-import torchvision.transforms as transforms
-from torchvision.utils import save_image
-import torchvision.datasets as vdsets
-
-from lib.resflow1d import ResidualFlow1d, ACT_FNS
+from torch.optim.lr_scheduler import CosineAnnealingLR
 import lib.optimizers as optim
 import lib.utils as utils
-import lib.layers as layers
-import lib.layers.base as base_layers
 from lib.lr_scheduler import CosineAnnealingWarmRestarts
 from datasets import get_datasets, init_np_seed
 from lib.model import PCResFlow
@@ -28,15 +22,14 @@ from tensorboardX import SummaryWriter
 
 def main():
     lipschitz_constants = []
-    ords = []
-
     start_time = time.time()
     # entropy_avg_meter = AverageValueMeter()
     # latent_nats_avg_meter = AverageValueMeter()
     point_nats_avg_meter = AverageValueMeter()
 
-    for epoch in range(args.begin_epoch, args.nepochs):
+    for epoch in range(args.begin_epoch, args.epochs):
         logger.info('Current LR {}'.format(optimizer.param_groups[0]['lr']))
+        train_loss, train_count = 0, 0
         for bidx, data in enumerate(train_loader):
             optimizer.zero_grad()
             idx_batch, tr_batch, te_batch = data['idx'], data['train_points'], data['test_points']
@@ -47,8 +40,8 @@ def main():
                     tr_batch, rot_axis=train_loader.dataset.gravity_axis)
             inputs = tr_batch.to(device)
             out, loss = model(inputs, step, writer)
-
-            # do the gradient update outside the model, update lipschitz every update_freq
+            train_count += 1
+            train_loss += loss.item()
             loss.backward()
             optimizer.step()
             #optimizer.zero_grad()
@@ -67,12 +60,15 @@ def main():
 
 
         lipschitz_constants.append(get_lipschitz_constants(model))
-        ords.append(get_ords(model))
         logger.info('Lipsh: {}'.format(pretty_repr(lipschitz_constants[-1])))
-        logger.info('Order: {}'.format(pretty_repr(ords[-1])))
+        writer.add_scalar('avg_train_loss', train_loss / train_count, epoch)
+        print("Epoch %d Time [%3.2fs]  Likelihood  %2.5f"
+                      % (epoch, time.time() - start_time, train_loss / train_count  ))
 
-        if args.scheduler and scheduler is not None:
-            scheduler.step()
+        scheduler.step()
+        if epoch % 20 == 0:
+            torch.save(model.state_dict(), os.path.join('checkpoints', args.save, 'models/model.t7'))
+
 
 
 if __name__ == '__main__':
@@ -87,7 +83,7 @@ if __name__ == '__main__':
     logger.info(args)
 
     # cuda device
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:'+str(args.gpu) if torch.cuda.is_available() else 'cpu')
     if device.type == 'cuda':
         logger.info('Found {} CUDA devices.'.format(torch.cuda.device_count()))
     else:
@@ -134,12 +130,8 @@ if __name__ == '__main__':
     #########  optimizer   ###############
     ######################################
     if args.optimizer == 'adam':
-        optimizer = optim.Adam(model.parameters(), lr=args.lr, betas=(0.9, 0.99), weight_decay=args.wd)
-        if args.scheduler: scheduler = CosineAnnealingWarmRestarts(optimizer, 20, T_mult=2,                                                           last_epoch=args.begin_epoch - 1)
-    elif args.optimizer == 'adamax':
-        optimizer = optim.Adamax(model.parameters(), lr=args.lr, betas=(0.9, 0.99), weight_decay=args.wd)
-    elif args.optimizer == 'rmsprop':
-        optimizer = optim.RMSprop(model.parameters(), lr=args.lr, weight_decay=args.wd)
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, betas=(0.9, 0.99), weight_decay=args.wd)
+        scheduler = CosineAnnealingLR(optimizer, args.epochs, eta_min=args.lr)
     elif args.optimizer == 'sgd':
         optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.wd)
         if args.scheduler:
@@ -158,6 +150,10 @@ if __name__ == '__main__':
     else:
         log_dir = "runs/time-%d" % time.time()
     writer = SummaryWriter(logdir=log_dir)
+
+    model_path = os.path.join('checkpoints', args.save, 'models')
+    if not os.path.isdir(model_path):
+        os.makedirs(model_path)
 
     main()
     # test upload
