@@ -147,3 +147,5 @@ def test_resflow(args, input_size):
 #test_iresblock([4, 10], True, 64)  # using linear model
 test_iresblock([4, 10], False, 64) # using conv1d model
 #test_resflow(args, [2, 4, 1024] )
+
+

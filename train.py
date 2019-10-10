@@ -61,8 +61,20 @@ def main():
                       % (epoch, time.time() - start_time, train_loss / train_count  ))
 
         scheduler.step()
-        if epoch % 20 == 0:
+
+        if epoch % args.val_freq == 0:
+            print('Start testing the model at epoch {}'.format(epoch))
+            model.eval()
+            _, samples = model.sample(args.val_batchsize, args.tr_max_sample_points, truncate_std=None, gpu=device)
+            test_path = os.path.join('checkpoints', args.save, 'test_results/')
+            if not os.path.isdir(test_path):
+                os.mkdir(test_path)
+            np.save(os.path.join(test_path, 'samples_' + str(epoch) + '.npy'), samples.detach().cpu().numpy())
+
+            # save the recent model (should save the best one)
             torch.save(model.state_dict(), os.path.join('checkpoints', args.save, 'models/model.t7'))
+
+
 
 
 
@@ -151,4 +163,3 @@ if __name__ == '__main__':
         os.makedirs(model_path)
 
     main()
-    # test upload

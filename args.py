@@ -77,10 +77,12 @@ def init_parse():
 
     # save and eval
     parser.add_argument('--save', help='directory to save results', type=str, default='exp1')
-    parser.add_argument('--val-batchsize', help='minibatch size', type=int, default=200)
+    parser.add_argument('--val-batchsize', help='minibatch size', type=int, default=50)
     parser.add_argument('--ema-val', type=eval, choices=[True, False], default=True)
     parser.add_argument('--update-freq', type=int, default=1)
     parser.add_argument('--log-freq', type=int, default=20)
+    parser.add_argument('--val-freq', type=int, default=20)
+
 
 
     # others
