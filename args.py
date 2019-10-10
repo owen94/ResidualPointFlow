@@ -9,7 +9,7 @@ def init_parse():
     parser.add_argument('--first-resblock', type=eval, choices=[True, False], default=True)
     parser.add_argument('--nblocks', type=str, default='16-16-16')
     parser.add_argument('--factor-out', type=eval, choices=[True, False], default=False)
-    parser.add_argument('--idim', type=int, default=128)
+    parser.add_argument('--idim', type=int, default=512)
     parser.add_argument('--input_dim', type=int, default=3)
     parser.add_argument('--zdim', type=int, default=128)
 
@@ -35,9 +35,9 @@ def init_parse():
     parser.add_argument('--kernels', type=str, default='3-1-3')
     parser.add_argument('--quadratic', type=eval, choices=[True, False], default=False)
     parser.add_argument('--fc-end', type=eval, choices=[True, False], default=True)
-    parser.add_argument('--fc-idim', type=int, default=512)
+    parser.add_argument('--fc-idim', help='fc dims',type=int, default=512)
     parser.add_argument('--preact', type=eval, choices=[True, False], default=False)
-    parser.add_argument('--cdim', type=int, default=256)
+    parser.add_argument('--cdim', help='classication dim',type=int, default=256)
     parser.add_argument('--task', type=str, choices=['density', 'classification', 'hybrid'], default='density')
 
     # data parameters
@@ -70,7 +70,7 @@ def init_parse():
     parser.add_argument('--scale-dim', type=eval, choices=[True, False], default=False)
     parser.add_argument('--resume', type=str, default=None)
     parser.add_argument('--begin-epoch', type=int, default=0)
-    parser.add_argument('--gpu', type=int, default=0)
+    parser.add_argument('--gpu', type=int, default=1)
     parser.add_argument('--nworkers', type=int, default=4)
     parser.add_argument('--distributed', type=bool, default=False)
 

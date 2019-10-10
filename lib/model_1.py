@@ -33,10 +33,10 @@ class PCResFlow_1(nn.Module):
 
         # Loss
         loss = -log_px.mean()
-        recon_nats = loss / float(x.size(1) * x.size(2))
+        recon_nats = loss.item() / float(x.size(1) * x.size(2))
 
         if writer is not None:
-            writer.add_scalar('train/recon', loss, step)
+            writer.add_scalar('train/recon', loss.item(), step)
             writer.add_scalar('train/recon_nats', recon_nats, step)
 
         return {
