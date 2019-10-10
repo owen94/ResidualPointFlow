@@ -23,7 +23,6 @@ class PCResFlow_1(nn.Module):
     def forward(self, x, step, writer=None):
         # x is (n, l, c)
         batch_size = x.size(0)
-        num_points = x.size(1)
 
         x = x.transpose(1, 2)
         # Compute the reconstruction likelihood P(X|z)

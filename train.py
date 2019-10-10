@@ -1,13 +1,8 @@
-import argparse
 import time
-import math
 import os
 import os.path
-import numpy as np
 from tqdm import tqdm
-import gc
 
-import torch
 from torch.optim.lr_scheduler import CosineAnnealingLR
 import lib.optimizers as optim
 import lib.utils as utils
@@ -62,7 +57,7 @@ def main():
         lipschitz_constants.append(get_lipschitz_constants(model))
         logger.info('Lipsh: {}'.format(pretty_repr(lipschitz_constants[-1])))
         writer.add_scalar('avg_train_loss', train_loss / train_count, epoch)
-        print("Epoch %d Time [%3.2fs]  Likelihood  %2.5f"
+        print("Epoch %d Time [%3.2fs]  Likelihood Loss  %2.5f"
                       % (epoch, time.time() - start_time, train_loss / train_count  ))
 
         scheduler.step()
