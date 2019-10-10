@@ -31,8 +31,8 @@ class PCResFlow_1(nn.Module):
         log_px = log_py - delta_log_py
 
         # Loss
-        loss = -log_px.mean()
-        recon_nats = loss.item() / float(x.size(1) * x.size(2))
+        loss = -log_px.mean() / (float(x.size(1) * x.size(2)))
+        recon_nats = loss.item()
 
         if writer is not None:
             writer.add_scalar('train/recon', loss.item(), step)

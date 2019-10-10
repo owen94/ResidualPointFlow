@@ -26,7 +26,6 @@ def main():
         logger.info('Current LR {}'.format(optimizer.param_groups[0]['lr']))
         train_loss, train_count = 0, 0
         for bidx, data in enumerate(train_loader):
-            optimizer.zero_grad()
             idx_batch, tr_batch, te_batch = data['idx'], data['train_points'], data['test_points']
             step = bidx + len(train_loader) * epoch
             model.train()
@@ -37,9 +36,9 @@ def main():
             out, loss = model(inputs, step, writer)
             train_count += 1
             train_loss += loss.item()
+            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            #optimizer.zero_grad()
             update_lipschitz(model)
 
             #entropy, prior_nats, recon_nats = out['entropy'], out['prior_nats'], out['recon_nats']
@@ -53,15 +52,14 @@ def main():
                 print("Epoch %d Batch [%2d/%2d] Time [%3.2fs]  PointNats %2.5f"
                       % (epoch, bidx, len(train_loader), duration, point_nats_avg_meter.avg))
 
-
+        scheduler.step()
         lipschitz_constants.append(get_lipschitz_constants(model))
         logger.info('Lipsh: {}'.format(pretty_repr(lipschitz_constants[-1])))
         writer.add_scalar('avg_train_loss', train_loss / train_count, epoch)
         print("Epoch %d Time [%3.2fs]  Likelihood Loss  %2.5f"
                       % (epoch, time.time() - start_time, train_loss / train_count))
 
-        scheduler.step()
-
+        # generate samples
         if epoch % args.val_freq == 0:
             print('Start testing the model at epoch {}'.format(epoch))
             model.eval()
