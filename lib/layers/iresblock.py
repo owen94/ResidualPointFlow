@@ -72,9 +72,6 @@ class iResBlock(nn.Module):
         tol = atol + y.abs() * rtol
         while not torch.all((x - x_prev)**2 / tol < 1):
             x, x_prev = y - self.nnet(x), x
-            # if no detach, model memory will explode
-            x = x.detach()
-            x_prev = x_prev.detach()
             i += 1
             if i > 1000:
                 logger.info('Iterations exceeded 1000 for inverse.')

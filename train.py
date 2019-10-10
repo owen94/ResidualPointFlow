@@ -65,7 +65,8 @@ def main():
         if epoch % args.val_freq == 0:
             print('Start testing the model at epoch {}'.format(epoch))
             model.eval()
-            _, samples = model.sample(args.val_batchsize, args.tr_max_sample_points, truncate_std=None, gpu=device)
+            with torch.no_grad():
+                _, samples = model.sample(args.val_batchsize, args.tr_max_sample_points, truncate_std=None, gpu=device)
             test_path = os.path.join('checkpoints', args.save, 'test_results/')
             if not os.path.isdir(test_path):
                 os.mkdir(test_path)
