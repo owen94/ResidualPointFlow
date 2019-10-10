@@ -30,24 +30,23 @@ Residual Flow Based generative model for point cloud generation
         - removed the domains and codomains as they are not necessary for better performance 
     - invertible residual block with conv1d or linear1d  -- done 
         - initial_size = [n, c, l]
-    - reflow with stacked resflow 
+    - reflow with stacked resflow - done 
     
-- TO DO List
-    1. experiments with vanilla residual point flow 
-    2. implement the conditional residual point flow model: concatenate the latent representation learnt by the encoder to the second conv-layer in iResBlock 
-      - A typical iResBlock taks as input (n, c, l) -> 1x1 conv1d -> 3x3 conv1d **(concatenate latent features here)** -> 1x1 conv1d 
-      - **Question**: only concatenate in the first block or every block? 
-    
-    3. extensive experiments 
-    4. writeup 
+## TO DO List
+1. experiments with vanilla residual point flow
+    - test and visualization mode 
+    - evaluation with multiple distance metrics 
 
-
+2. implement the **conditional** residual point flow model: concatenate the latent representation learnt by the encoder to the second conv-layer in iResBlock 
+   - A typical iResBlock taks as input (n, c, l) -> 1x1 conv1d -> 3x3 conv1d **(concatenate latent features here)** -> 1x1 conv1d 
+   - **Question**: only concatenate in the first block or every block? 
+3. extensive experiments and writeup 
 
 ## How to run the code 
 
 ### Dataset 
 
-The point clouds are uniformly sampled from meshes from ShapeNetCore dataset (version 2) and use the official split. Download through this [link](https://drive.google.com/drive/folders/1G0rf-6HSHoTll6aH7voh-dXj6hCRhSAQ?usp=sharing)  - credit to Yant et al, PointFlow. 
+The point clouds are uniformly sampled from meshes from ShapeNetCore dataset (version 2) and use the official split. Download through this [link](https://drive.google.com/drive/folders/1G0rf-6HSHoTll6aH7voh-dXj6hCRhSAQ?usp=sharing)  - credit to Yang et al, PointFlow. 
 
 ```markdown
 cd ResidualPointFlow/
@@ -68,6 +67,8 @@ cuda = 10.0
 ```
 
 ### Training
+
+check the args.py file for the arguments 
 
 ```python
 python train.py 
