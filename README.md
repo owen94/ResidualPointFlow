@@ -1,6 +1,8 @@
 # Residual PointCloud Flow Learning 
 Residual Flow Based generative model for point cloud generation 
 
+## Introduction 
+
 - Motivation: 
   - Not too much work on point cloud generation which is useful for multiple downstream tasks 
   - Want better-quality pc than current state-of-the-art: PointFlow 
@@ -41,9 +43,9 @@ Residual Flow Based generative model for point cloud generation
 
 
 
-### How to run the code 
+## How to run the code 
 
-####Dataset 
+### Dataset 
 
 The point clouds are uniformly sampled from meshes from ShapeNetCore dataset (version 2) and use the official split. Download through this [link](https://drive.google.com/drive/folders/1G0rf-6HSHoTll6aH7voh-dXj6hCRhSAQ?usp=sharing)  - credit to Yant et al, PointFlow. 
 
@@ -55,7 +57,7 @@ cd data
 unzip ShapeNetCore.v2.PC15k.zip
 ```
 
-#### Dependencies 
+### Dependencies 
 
 ```markdown
 pytorch = 1.2 
@@ -65,7 +67,7 @@ TensorboardX
 cuda = 10.0 
 ```
 
-#### Training
+### Training
 
 ```python
 python train.py 
