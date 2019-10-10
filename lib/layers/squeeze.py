@@ -69,8 +69,15 @@ class SqueezeLayer1d(nn.Module):
 
 
 def unsqueeze1d(input, upscale_factor=2):
-    return torch.pixel_shuffle(input, upscale_factor)
-
+    '''
+       [:, C*r, L] -> [:, C, L*r]
+       '''
+    batch_size, in_channels, length = input.shape
+    out_channels = in_channels // upscale_factor
+    out_len = length * upscale_factor
+    input_view = input.reshape(batch_size, out_channels, upscale_factor, length)
+    output = input_view.permute(0, 1, 3, 2)
+    return output.reshape(batch_size, out_channels, out_len)
 
 def squeeze1d(input, downscale_factor=2):
     '''
@@ -78,10 +85,15 @@ def squeeze1d(input, downscale_factor=2):
     '''
     batch_size, in_channels, length = input.shape
     out_channels = in_channels * downscale_factor
-
     out_len = length // downscale_factor
-
     input_view = input.reshape(batch_size, in_channels, out_len, downscale_factor)
-
     output = input_view.permute(0, 1, 3, 2)
     return output.reshape(batch_size, out_channels, out_len)
+
+# import torch
+# inputs = torch.randn(1, 2, 4)
+# print(inputs)
+# output = squeeze1d(inputs)
+# print(output)
+# new_input = unsqueeze1d(output)
+# print(new_input)

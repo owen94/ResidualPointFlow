@@ -9,7 +9,7 @@ def init_parse():
     parser.add_argument('--first-resblock', type=eval, choices=[True, False], default=True)
     parser.add_argument('--nblocks', type=str, default='16-16-16')
     parser.add_argument('--factor-out', type=eval, choices=[True, False], default=False)
-    parser.add_argument('--idim', type=int, default=512)
+    parser.add_argument('--idim', type=int, default=128)
     parser.add_argument('--input_dim', type=int, default=3)
     parser.add_argument('--zdim', type=int, default=128)
 
@@ -59,7 +59,7 @@ def init_parse():
     # optimizer parameters
     parser.add_argument('--optimizer', type=str, choices=['adam', 'adamax', 'rmsprop', 'sgd'], default='adam')
     parser.add_argument('--epochs', help='Number of epochs for training', type=int, default=1000)
-    parser.add_argument('--batch_size', help='Minibatch size', type=int, default=8)
+    parser.add_argument('--batch_size', help='Minibatch size', type=int, default=32)
     parser.add_argument('--lr', help='Learning rate', type=float, default=1e-3)
     parser.add_argument('--wd', help='Weight decay', type=float, default=1e-4)
     parser.add_argument('--warmup-iters', type=int, default=1000)

@@ -58,7 +58,7 @@ def main():
         logger.info('Lipsh: {}'.format(pretty_repr(lipschitz_constants[-1])))
         writer.add_scalar('avg_train_loss', train_loss / train_count, epoch)
         print("Epoch %d Time [%3.2fs]  Likelihood Loss  %2.5f"
-                      % (epoch, time.time() - start_time, train_loss / train_count  ))
+                      % (epoch, time.time() - start_time, train_loss / train_count))
 
         scheduler.step()
 
@@ -73,10 +73,6 @@ def main():
 
             # save the recent model (should save the best one)
             torch.save(model.state_dict(), os.path.join('checkpoints', args.save, 'models/model.t7'))
-
-
-
-
 
 if __name__ == '__main__':
 

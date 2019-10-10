@@ -46,6 +46,6 @@ class PCResFlow_1(nn.Module):
         # Generate the shape code from the prior
         z = self.sample_gaussian((batch_size, num_points * self.input_dim), truncate_std, gpu=gpu)
         # Sample points conditioned on the shape code
-        x = self.point_rsf(z, reverse=True)
+        x = self.point_rsf(z, inverse=True)
         return z, x
 
