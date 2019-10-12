@@ -92,15 +92,17 @@ class TanhTransform(nn.Module):
 
     def __init__(self):
         nn.Module.__init__(self)
+        self.m = nn.Tanh()
 
     def forward(self, x, logpx=None):
-        x = nn.Tanh()(x)
+        x = self.m(x)
         if logpx is None:
             return x
         return x, logpx
 
     def inverse(self, y, logpy=None):
-        y = nn.Tanh()(y)
+        #y = 0.5 * torch.log((1+y)/(1-y))
+        y = self.m(y)
         if logpy is None:
             return y
         return y, logpy
@@ -112,4 +114,4 @@ if __name__ == '__main__':
     yy = m(xx)
     x = m(yy)
     print(x)
-    print(yy)
+    print(xx)

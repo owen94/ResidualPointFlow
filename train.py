@@ -123,6 +123,7 @@ if __name__ == '__main__':
 
     #init_layer = layers.LogitTransform(0.05)
     init_layer = layers.TanhTransform()
+    #init_layer = None
     model = PCResFlow_1(args, input_size, init_layer=init_layer)
     model.to(device)
     ema = utils.ExponentialMovingAverage(model)

@@ -36,7 +36,7 @@ class ResidualFlow1d(nn.Module):
         n_lipschitz_iters=None,
         sn_atol=None,
         sn_rtol=None,
-        n_power_series=5,
+        n_power_series=None,
         n_dist='geometric',
         n_samples=1,
         kernels='3-1-3',

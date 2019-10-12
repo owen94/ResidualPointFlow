@@ -19,7 +19,7 @@ def init_parse():
     parser.add_argument('--sn-tol', type=float, default=1e-3)
     parser.add_argument('--learn-p', type=eval, choices=[True, False], default=False)
 
-    parser.add_argument('--n-power-series', type=int, default=5)
+    parser.add_argument('--n-power-series', type=int, default=None)
     parser.add_argument('--n-dist', choices=['geometric', 'poisson'], default='poisson')
     parser.add_argument('--n-samples', type=int, default=1)
     parser.add_argument('--n-exact-terms', type=int, default=2)
