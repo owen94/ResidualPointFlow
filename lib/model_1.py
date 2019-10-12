@@ -5,12 +5,12 @@ from utils import truncated_normal, standard_normal_logprob
 
 # Model
 class PCResFlow_1(nn.Module):
-    def __init__(self, args, input_size):
+    def __init__(self, args, input_size, init_layer=None):
         super(PCResFlow_1, self).__init__()
         self.input_dim = args.input_dim
         self.distributed = args.distributed
         self.truncate_std = None
-        self.point_rsf = pc_resflow(args, input_size)
+        self.point_rsf = pc_resflow(args, input_size, init_layer)
 
     @staticmethod
     def sample_gaussian(size, truncate_std=None, gpu=None):

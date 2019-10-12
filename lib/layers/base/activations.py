@@ -61,15 +61,17 @@ class Swish(nn.Module):
 if __name__ == '__main__':
 
     m = Swish()
+    m = torch.nn.Tanh()
     xx = torch.linspace(-5, 5, 1000).requires_grad_(True)
     yy = m(xx)
-    dd, dbeta = torch.autograd.grad(yy.sum() * 2, [xx, m.beta])
-
-    import matplotlib.pyplot as plt
-
-    plt.plot(xx.detach().numpy(), yy.detach().numpy(), label='Func')
-    plt.plot(xx.detach().numpy(), dd.detach().numpy(), label='Deriv')
-    plt.plot(xx.detach().numpy(), torch.max(dd.detach().abs() - 1, torch.zeros_like(dd)).numpy(), label='|Deriv| > 1')
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+    print(yy.detach().cpu().numpy().min())
+    # dd, dbeta = torch.autograd.grad(yy.sum() * 2, [xx, m.beta])
+    #
+    # import matplotlib.pyplot as plt
+    #
+    # plt.plot(xx.detach().numpy(), yy.detach().numpy(), label='Func')
+    # plt.plot(xx.detach().numpy(), dd.detach().numpy(), label='Deriv')
+    # plt.plot(xx.detach().numpy(), torch.max(dd.detach().abs() - 1, torch.zeros_like(dd)).numpy(), label='|Deriv| > 1')
+    # plt.legend()
+    # plt.tight_layout()
+    # plt.show()

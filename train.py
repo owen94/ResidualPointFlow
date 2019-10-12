@@ -46,11 +46,11 @@ def main():
             #entropy_avg_meter.update(entropy)
             point_nats_avg_meter.update(recon_nats)
             #latent_nats_avg_meter.update(prior_nats)
-            if step % args.log_freq == 0:
-                duration = time.time() - start_time
-                start_time = time.time()
-                print("Epoch %d Batch [%2d/%2d] Time [%3.2fs]  PointNats %2.5f"
-                      % (epoch, bidx, len(train_loader), duration, point_nats_avg_meter.avg))
+            # if step % args.log_freq == 0:
+            #     duration = time.time() - start_time
+            #     start_time = time.time()
+            #     print("Epoch %d Batch [%2d/%2d] Time [%3.2fs]  PointNats %2.5f"
+            #           % (epoch, bidx, len(train_loader), duration, point_nats_avg_meter.avg))
 
         scheduler.step()
         lipschitz_constants.append(get_lipschitz_constants(model))
@@ -121,8 +121,9 @@ if __name__ == '__main__':
     input_size = (args.batch_size, n_channels, args.tr_max_sample_points)
     dataset_size = len(train_loader.dataset)
 
-    scheduler = None
-    model = PCResFlow_1(args, input_size)
+    #init_layer = layers.LogitTransform(0.05)
+    init_layer = layers.TanhTransform()
+    model = PCResFlow_1(args, input_size, init_layer=init_layer)
     model.to(device)
     ema = utils.ExponentialMovingAverage(model)
     logger.info(model)

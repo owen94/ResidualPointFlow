@@ -86,3 +86,30 @@ class LogitTransform(nn.Module):
 
     def __repr__(self):
         return ('{name}({alpha})'.format(name=self.__class__.__name__, **self.__dict__))
+
+
+class TanhTransform(nn.Module):
+
+    def __init__(self):
+        nn.Module.__init__(self)
+
+    def forward(self, x, logpx=None):
+        x = nn.Tanh()(x)
+        if logpx is None:
+            return x
+        return x, logpx
+
+    def inverse(self, y, logpy=None):
+        y = nn.Tanh()(y)
+        if logpy is None:
+            return y
+        return y, logpy
+
+
+if __name__ == '__main__':
+    m = TanhTransform()
+    xx = torch.randn(2)
+    yy = m(xx)
+    x = m(yy)
+    print(x)
+    print(yy)

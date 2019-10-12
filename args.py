@@ -7,7 +7,7 @@ def init_parse():
     # model parameters
     parser.add_argument('--block', type=str, choices=['resblock', 'coupling'], default='resblock')
     parser.add_argument('--first-resblock', type=eval, choices=[True, False], default=True)
-    parser.add_argument('--nblocks', type=str, default='16-16-16')
+    parser.add_argument('--nblocks', type=str, default='2-2-2')
     parser.add_argument('--factor-out', type=eval, choices=[True, False], default=False)
     parser.add_argument('--idim', type=int, default=128)
     parser.add_argument('--input_dim', type=int, default=3)
@@ -26,17 +26,17 @@ def init_parse():
     parser.add_argument('--neumann-grad', type=eval, choices=[True, False], default=True)
     parser.add_argument('--mem-eff', type=eval, choices=[True, False], default=True)
 
-    parser.add_argument('--act', type=str, choices=ACT_FNS.keys(), default='swish')
+    parser.add_argument('--act', type=str, choices=ACT_FNS.keys(), default='tanh')
     parser.add_argument('--actnorm', type=eval, default=True, choices=[True, False])
     parser.add_argument('--fc-actnorm', type=eval, default=False, choices=[True, False])
-    parser.add_argument('--batchnorm', type=eval, default=True, choices=[True, False])
+    parser.add_argument('--batchnorm', type=eval, default=False, choices=[True, False])
     parser.add_argument('--dropout', type=float, default=0.)
     parser.add_argument('--fc', type=eval, default=False, choices=[True, False])
     parser.add_argument('--kernels', type=str, default='3-1-3')
     parser.add_argument('--quadratic', type=eval, choices=[True, False], default=False)
     parser.add_argument('--fc-end', type=eval, choices=[True, False], default=True)
     parser.add_argument('--fc-idim', help='fc dims',type=int, default=512)
-    parser.add_argument('--preact', type=eval, choices=[True, False], default=False)
+    parser.add_argument('--preact', type=eval, choices=[True, False], default=True)
     parser.add_argument('--cdim', help='classication dim',type=int, default=256)
     parser.add_argument('--task', type=str, choices=['density', 'classification', 'hybrid'], default='density')
 
@@ -61,7 +61,7 @@ def init_parse():
     parser.add_argument('--epochs', help='Number of epochs for training', type=int, default=1000)
     parser.add_argument('--batch_size', help='Minibatch size', type=int, default=32)
     parser.add_argument('--lr', help='Learning rate', type=float, default=1e-3)
-    parser.add_argument('--wd', help='Weight decay', type=float, default=1e-4)
+    parser.add_argument('--wd', help='Weight decay', type=float, default=5e-4)
     parser.add_argument('--warmup-iters', type=int, default=1000)
     parser.add_argument('--annealing-iters', type=int, default=0)
 
@@ -74,7 +74,6 @@ def init_parse():
     parser.add_argument('--nworkers', type=int, default=4)
     parser.add_argument('--distributed', type=bool, default=False)
 
-
     # save and eval
     parser.add_argument('--save', help='directory to save results', type=str, default='exp1')
     parser.add_argument('--val-batchsize', help='minibatch size', type=int, default=50)
@@ -82,8 +81,6 @@ def init_parse():
     parser.add_argument('--update-freq', type=int, default=1)
     parser.add_argument('--log-freq', type=int, default=20)
     parser.add_argument('--val-freq', type=int, default=20)
-
-
 
     # others
     parser.add_argument('--rcrop-pad-mode', type=str, choices=['constant', 'reflect'], default='reflect')

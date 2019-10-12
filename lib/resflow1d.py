@@ -12,6 +12,7 @@ ACT_FNS = {
     'lcube': lambda b: base_layers.LipschitzCube(),
     'identity': lambda b: base_layers.Identity(),
     'relu': lambda b: nn.ReLU(inplace=b),
+    'tanh': lambda b: nn.Tanh(),
 }
 
 
@@ -39,7 +40,7 @@ class ResidualFlow1d(nn.Module):
         n_dist='geometric',
         n_samples=1,
         kernels='3-1-3',
-        activation_fn='elu',
+        activation_fn='tanh',
         fc_end=True,
         fc_idim=128,
         n_exact_terms=0,
@@ -110,7 +111,7 @@ class ResidualFlow1d(nn.Module):
                     initial_size=(c, l),
                     idim=self.intermediate_dim,
                     squeeze=(i < self.n_scale - 1),  # don't squeeze last layer
-                    init_layer=self.init_layer if i == 0 else None,
+                    init_layer=self.init_layer if i == 0 else None, # only have init_layer in the beginning
                     n_blocks=self.n_blocks[i],
                     quadratic=self.quadratic,
                     actnorm=self.actnorm,
@@ -139,7 +140,7 @@ class ResidualFlow1d(nn.Module):
                 )
             )
             # update the initial size
-            c, l = c * 2 if self.factor_out else c * 2, l // 2
+            c, l = c * 2, l // 2
         return nn.ModuleList(transforms)
 
     def _calc_n_scale(self, input_size):
