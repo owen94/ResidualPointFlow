@@ -61,10 +61,21 @@ class Swish(nn.Module):
 if __name__ == '__main__':
 
     m = Swish()
-    m = torch.nn.Tanh()
     xx = torch.linspace(-5, 5, 1000).requires_grad_(True)
     yy = m(xx)
     print(yy.detach().cpu().numpy().min())
+
+    ACT_FNS = {
+        'softplus': lambda b: nn.Softplus(),
+        'elu': lambda b: nn.ELU(inplace=b),
+        'swish': lambda b: Swish(),
+        'lcube': lambda b: LipschitzCube(),
+        'identity': lambda b: Identity(),
+        'relu': lambda b: nn.ReLU(inplace=b),
+        'tanh': lambda b: nn.Tanh(),
+    }
+
+
     # dd, dbeta = torch.autograd.grad(yy.sum() * 2, [xx, m.beta])
     #
     # import matplotlib.pyplot as plt

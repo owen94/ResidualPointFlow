@@ -7,17 +7,16 @@ def init_parse():
     # model parameters
     parser.add_argument('--block', type=str, choices=['resblock', 'coupling'], default='resblock')
     parser.add_argument('--first-resblock', type=eval, choices=[True, False], default=True)
-    parser.add_argument('--nblocks', type=str, default='2-2-2')
-    parser.add_argument('--factor-out', type=eval, choices=[True, False], default=False)
+    parser.add_argument('--nblocks', type=str, default='1-1')
+    parser.add_argument('--squeeze', type=eval, choices=[True, False], default=False)
     parser.add_argument('--idim', type=int, default=128)
     parser.add_argument('--input_dim', type=int, default=3)
-    parser.add_argument('--zdim', type=int, default=128)
+    parser.add_argument('--init-layer', type=str, choices=['norm','tanh','none'], default='none'),
+
 
     parser.add_argument('--coeff', type=float, default=0.98)
-    parser.add_argument('--vnorms', type=str, default='2222')
     parser.add_argument('--n-lipschitz-iters', type=int, default=None)
     parser.add_argument('--sn-tol', type=float, default=1e-3)
-    parser.add_argument('--learn-p', type=eval, choices=[True, False], default=False)
 
     parser.add_argument('--n-power-series', type=int, default=None)
     parser.add_argument('--n-dist', choices=['geometric', 'poisson'], default='poisson')
@@ -31,13 +30,11 @@ def init_parse():
     parser.add_argument('--fc-actnorm', type=eval, default=False, choices=[True, False])
     parser.add_argument('--batchnorm', type=eval, default=False, choices=[True, False])
     parser.add_argument('--dropout', type=float, default=0.)
-    parser.add_argument('--fc', type=eval, default=False, choices=[True, False])
+    parser.add_argument('--fc', type=eval, default=False, choices=[True, False]) #use fc or conv1d in resblock
     parser.add_argument('--kernels', type=str, default='3-1-3')
-    parser.add_argument('--quadratic', type=eval, choices=[True, False], default=False)
     parser.add_argument('--fc-end', type=eval, choices=[True, False], default=True)
     parser.add_argument('--fc-idim', help='fc dims',type=int, default=512)
     parser.add_argument('--preact', type=eval, choices=[True, False], default=True)
-    parser.add_argument('--cdim', help='classication dim',type=int, default=256)
     parser.add_argument('--task', type=str, choices=['density', 'classification', 'hybrid'], default='density')
 
     # data parameters

@@ -121,14 +121,17 @@ if __name__ == '__main__':
     input_size = (args.batch_size, n_channels, args.tr_max_sample_points)
     dataset_size = len(train_loader.dataset)
 
-    #init_layer = layers.LogitTransform(0.05)
-    init_layer = layers.TanhTransform()
-    #init_layer = None
+    if args.init_layer == 'norm':
+        init_layer = layers.Normalize(mean=[0, 0, 0], std=[1, 1, 1])
+    elif args.init_layer == 'none':
+        init_layer = None
+    elif args.init_layer == 'tanh':
+        init_layer = layers.TanhTransform()
     model = PCResFlow_1(args, input_size, init_layer=init_layer)
     model.to(device)
     ema = utils.ExponentialMovingAverage(model)
     logger.info(model)
-    logger.info('EMA: {}'.format(ema))
+    #logger.info('EMA: {}'.format(ema))
 
     ######################################
     #########  optimizer   ###############
