@@ -38,9 +38,7 @@ class PCResFlow_1(nn.Module):
             writer.add_scalar('train/recon', loss.item(), step)
             writer.add_scalar('train/recon_nats', recon_nats, step)
 
-        return {
-            'recon_nats': recon_nats,
-        }, loss
+        return loss, log_py.mean().detach(), delta_log_py.mean().detach()
 
     def sample(self, batch_size, num_points, truncate_std=None, gpu=None):
         # Generate the shape code from the prior

@@ -345,7 +345,7 @@ class FCNet(nn.Module):
         self.nnet = nn.Sequential(*nnet)
 
     def forward(self, x):
-        x = x.view(x.shape[0], -1)
+        x = x.contiguous().view(x.shape[0], -1)
         y = self.nnet(x)
         return y.view(y.shape[0], *self.input_shape)
 

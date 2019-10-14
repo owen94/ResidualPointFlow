@@ -65,6 +65,11 @@ def update_lipschitz(model):
             if isinstance(m, base_layers.SpectralNormConv1d) or isinstance(m, base_layers.SpectralNormLinear1d):
                 m.compute_weight(update=True)
 
+# def update_lipschitz(model, n_iterations):
+#     for m in model.modules():
+#         if isinstance(m, base_layers.SpectralNormLinear1d):
+#             m.compute_weight(update=True, n_iterations=n_iterations)
+
 def pretty_repr(a):
     return '[[' + ','.join(list(map(lambda i: f'{i:.2f}', a))) + ']]'
 
