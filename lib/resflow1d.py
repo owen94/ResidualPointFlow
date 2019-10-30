@@ -148,7 +148,8 @@ class ResidualFlow1d(nn.Module):
         return output
 
     def inverse(self, z, logpz=None):
-        z = z.view(z.shape[0], *self.dims[-1])
+        #z = z.view(z.shape[0], *self.dims[-1])  # comment to check density evaluation
+        z = z.view(2048, 3, 1)
         for idx in range(len(self.transforms) - 1, -1, -1):
             if logpz is None:
                 z = self.transforms[idx].inverse(z)
@@ -358,7 +359,7 @@ class FCWrapper(nn.Module):
 
     def forward(self, x, logpx=None):
         shape = x.shape
-        x = x.view(x.shape[0], -1)
+        x = x.contiguous().view(x.shape[0], -1)
         if logpx is None:
             y = self.fc_module(x)
             return y.view(*shape)
